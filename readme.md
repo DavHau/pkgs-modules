@@ -13,7 +13,7 @@ The override model has the following problems:
 
 Nixpkgs also contains another mechanism for configuring derivations, which is the nixos `module system`.
 
-Both the override model and the module system serve the purpose.
+Both the override model and the module system seem to serve the same purpose.
 It doesn't matter if a user builds a single package, a collection of packages, a dev-shell, or a whole linux distro. The output is always one or more derivations. Both the `override model` an the `module system` are ways to configure derivations. At the core they serve the same purpose. I believe, the main difference is, that one of them has the above mentioned problems, and the other one does not.
 
 We should not have two different models of configuring derivations in nixpkgs. We should find out which one is better, and then deprecate the other one. (Or find a new model which is better than both).
