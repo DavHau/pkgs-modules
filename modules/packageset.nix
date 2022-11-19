@@ -3,17 +3,20 @@
   t = l.types;
   pkgGenericType = t.either
     (t.submoduleWith {
-      modules = [./pkgWithBase.nix ./package.nix];
+      modules = [
+        ./package/interface-package-with-base.nix
+        ./package/implementation.nix
+      ];
     })
     (t.submoduleWith {
-      modules = [./pkgType.nix ./package.nix];
+      modules = [
+        ./package/interface-package.nix
+        ./package/implementation.nix
+      ];
     });
 
 in {
   options = {
-    name = l.mkOption {
-      type = t.str;
-    };
     pkgs = l.mkOption {
       type = t.attrsOf pkgGenericType;
     };

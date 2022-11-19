@@ -1,7 +1,6 @@
 {config, lib, ...}: let
   l = lib // builtins;
   t = l.types;
-  pkgs = import <nixpkgs> {};
   mkStringOption = args: l.mkOption (args // {type = t.str;});
   drvOrPkg = t.either
     t.package

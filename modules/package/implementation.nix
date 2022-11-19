@@ -2,12 +2,6 @@
   l = lib // builtins;
   t = l.types;
   pkgs = import <nixpkgs> {};
-  mkStringOption = args: l.mkOption (args // {type = t.str;});
-  drvOrPkg = t.either
-    t.package
-    (t.submoduleWith {
-      modules = [./package.nix];
-    });
   /*getOverrideFunctionArgs = function: let
     funcArgs = l.functionArgs function;
   in
@@ -20,10 +14,10 @@
       .funcArgs;*/
   overrideLegacyPackage = drv: pkg: drv.overrideAttrs (attrs:
     (l.removeAttrs pkg ["_module" "base" "derivation"]) //
-    { buildInputs = let
-        filteredInputs = l.trace (l.attrNames attrs) l.filter (input: ! pkg.buildInputs ? ${input.pname}) attrs.buildInputs or [];
+    (l.optionalAttrs (pkg ? buildInputs) { buildInputs = let
+        filteredInputs = l.filter (input: ! pkg.buildInputs ? ${input.pname}) attrs.buildInputs or [];
         newInputs = map toDerivation (l.attrValues pkg.buildInputs);
-      in (l.trace (l.toJSON (map (p: p.name) filteredInputs)) filteredInputs) ++ newInputs; });
+      in (filteredInputs) ++ newInputs; }));
 
   toDerivation = pkg:
     if l.isDerivation pkg
