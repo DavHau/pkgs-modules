@@ -2,16 +2,6 @@
   l = lib // builtins;
   t = l.types;
   pkgs = import <nixpkgs> {};
-  /*getOverrideFunctionArgs = function: let
-    funcArgs = l.functionArgs function;
-  in
-    if funcArgs != {}
-    then b.attrNames funcArgs
-    else
-      (
-        function (old: {passthru.funcArgs = l.attrNames old;})
-      )
-      .funcArgs;*/
   overrideLegacyPackage = drv: pkg: drv.overrideAttrs (attrs:
     (l.removeAttrs pkg ["_module" "base" "derivation"]) //
     (l.optionalAttrs (pkg ? buildInputs) { buildInputs = let

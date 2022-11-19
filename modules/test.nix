@@ -1,32 +1,43 @@
 let
-  pkgs = import <nixpkgs> {};
-  l = pkgs.lib // builtins;
+  nixpkgs = import <nixpkgs> {};
+  l = nixpkgs.lib // builtins;
   usermodule = {config, ...}:{
     pkgs = {
 
-      hello = {
-        base = pkgs.hello;
-        pname = "hello-patched";
-        version = pkgs.hello.version;
-        buildInputs.git = pkgs.git;
+      foo = {
+        base = nixpkgs.hello;
+        pname = "foo";
+        buildInputs.git = nixpkgs.git;
+      };
+
+      bar = {
+        base = nixpkgs.hello;
+        pname = "bar";
+        buildInputs.foo = config.pkgs.foo;
+      };
+
+      bar-with-different-git = {
+        base = config.pkgs.bar;
+      };
+
+      git-patched = {
+        base = nixpkgs.git;
+        pname = "git-patched";
       };
 
       tinc = {
-        base = pkgs.tinc;
-        # pname = "tinc";
-        version = pkgs.tinc.version;
+        base = nixpkgs.tinc;
+        version = nixpkgs.tinc.version;
         buildInputs.openssl = {
-          base = pkgs.openssl_3;
+          base = nixpkgs.openssl_3;
           pname = "openssl";
-          version = pkgs.openssl_3.version;
-          # buildPhase = "false";
         };
       };
     };
   };
   result = l.evalModules {
     modules = [
-      ./packageset.nix
+      ./default.nix
       usermodule
     ];
   };
